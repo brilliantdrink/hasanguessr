@@ -1,0 +1,59 @@
+@use 'colors';
+
+.inputs {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.monthHint {
+  font-size: .8rem;
+  margin-bottom: 1rem;
+}
+
+.guesses {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .guess {
+    padding: .5rem 1rem;
+    margin-bottom: 1rem;
+
+    background: colors.$egg;
+    color: colors.$black;
+    font-weight: 500;
+
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    &:last-child svg {
+      fill: colors.$red
+    }
+  }
+}
+
+.signature {
+  position: fixed;
+  width: 10rem;
+  bottom: .5rem;
+  right: 1rem;
+
+  opacity: .2;
+
+  //pointer-events: none;
+
+  font-size: .8rem;
+  text-align: right;
+  color: white;
+
+  .signatureSvg {
+    width: 80%;
+  }
+
+  p {
+    margin: 0 1rem .5rem 0;
+  }
+}

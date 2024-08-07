@@ -1,0 +1,72 @@
+@use '../../colors';
+
+.header {
+  width: 100%;
+  $header-height: 4rem;
+  height: $header-height;
+  border-bottom: 1px solid #3A3A3C;
+  background: colors.$egg;
+  color: colors.$black;
+  font-weight: 500;
+  padding: 0 2rem;
+
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+
+  :first-child {
+    justify-self: start;
+  }
+
+  :last-child {
+    justify-self: end;
+  }
+
+  h1 {
+    line-height: 1;
+    margin: 0;
+
+    font-family: 'Konstruktor', serif;
+
+    position: relative;
+    top: .15em;
+
+    .commie {
+      color: colors.$red;
+    }
+
+    img {
+      height: $header-height;
+    }
+  }
+
+  .group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .profanityCount {
+    background: transparentize(white, .9);
+    border-radius: .5rem;
+    padding: 0 .5rem;
+
+    display: flex;
+    gap: .3rem;
+  }
+
+  .profanityIcon {
+    height: 1.5rem
+  }
+
+  a, button {
+    color: inherit;
+    font-size: 1.5rem;
+
+    display: flex;
+    align-items: center;
+  }
+}

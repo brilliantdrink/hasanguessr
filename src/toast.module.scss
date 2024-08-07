@@ -1,0 +1,52 @@
+@use 'colors';
+
+.toast {
+  position: fixed;
+  width: 20rem;
+  $height: 4rem;
+  height: $height;
+
+  left: 50%;
+  $top-distance: 1rem;
+  top: $top-distance;
+
+  transform: translateX(-50%);
+
+  background: colors.$egg;
+  color: colors.$black;
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+  font-weight: 500;
+
+  box-shadow: 0 0 2rem transparentize(black, .7);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.open {
+    animation: .3s pop-in forwards;
+  }
+
+  @keyframes pop-in {
+    from {
+      transform: translateX(-50%) translateY(-$height - $top-distance - 4rem) scale(.7);
+    }
+    to {
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+  }
+
+  &.close {
+    animation: .8s pop-out forwards;
+  }
+
+  @keyframes pop-out {
+    from {
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+    to {
+      transform: translateX(-50%) translateY(-$height - $top-distance - 4rem) scale(.7);
+    }
+  }
+}

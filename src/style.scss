@@ -1,0 +1,47 @@
+@use 'colors';
+
+@font-face {
+  font-family: 'Jost';
+  src: url('./fonts/Jost-VariableFont_wght.woff2') format('woff2'),
+  url('./fonts/Jost-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Jost';
+  src: url('./fonts/Jost-Italic-VariableFont_wght.woff2') format('woff2'),
+  url('./fonts/Jost-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Konstruktor';
+  src: url('./fonts/Konstruktor.woff2') format('woff2'),
+  url('./fonts/Konstruktor.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+html, body, #app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: colors.$black;
+  color: colors.$egg;
+  font-family: 'Jost', sans-serif;
+}
+
+#app {
+  display: grid;
+  grid-template-rows: min-content min-content auto;
+  grid-template-areas: 'header' 'grid' 'keyboard';
+  justify-items: center;
+  padding-bottom: 3rem;
+  box-sizing: border-box;
+}

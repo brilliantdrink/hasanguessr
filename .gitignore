@@ -1,0 +1,6 @@
+clips_meta/
+*.txt
+*.crt
+*.key
+.env
+!docs/**

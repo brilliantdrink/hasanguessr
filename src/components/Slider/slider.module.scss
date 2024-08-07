@@ -1,0 +1,102 @@
+@use 'sass:math';
+@use '../../colors';
+
+.value {
+  font-family: "Konstruktor", serif;
+  font-size: 1.5rem;
+  letter-spacing: .1ch;
+  text-align: center;
+
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  span:last-child {
+    color: colors.$red;
+  }
+}
+
+.wrapper {
+  align-self: flex-start;
+
+  position: relative;
+  $wrapper-padding: .5rem;
+  padding: $wrapper-padding;
+  background: colors.$egg;
+  $slide-height: .3rem;
+
+  $range-width: 32rem;
+  $knob-size: 3rem;
+
+  .rangeSelect {
+    position: absolute;
+    top: $wrapper-padding;
+    left: $wrapper-padding - math.div($knob-size, 2);
+    width: $range-width + $knob-size;
+    height: $slide-height;
+    margin: 0;
+    appearance: none;
+    opacity: 0;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: $knob-size;
+      height: $knob-size;
+      background: transparent;
+      border: none;
+    }
+
+    &::-moz-range-thumb {
+      width: $knob-size;
+      height: $knob-size;
+      background: transparent;
+      border: none;
+    }
+  }
+
+  .slide {
+    width: $range-width;
+    height: $slide-height;
+
+    background: colors.$black;
+  }
+
+  .knob {
+    height: $knob-size;
+    width: $knob-size;
+
+    position: absolute;
+    top: $wrapper-padding + math.div($slide-height, 2);
+    --offset: 0;
+    transform: translateY(-50%) translateX(calc(-50% + var(--offset) * #{$range-width}));
+
+    .arrow {
+      position: absolute;
+      bottom: -.5rem;
+      $size: 80%;
+      left: math.div(100% - $size, 2);
+      width: $size;
+      height: math.div($size, 2);
+      transform: translateY(100%);
+      background-image: url('../../images/arrows-horizontal.svg');
+      background-size: cover;
+    }
+
+    .cog, .hs {
+      position: absolute;
+      height: $knob-size;
+      width: $knob-size;
+      background-size: cover;
+
+      cursor: pointer;
+    }
+
+    .cog {
+      background-image: url('../../images/cog.svg');
+      transform: rotate(calc(var(--offset) * 360deg * 2));
+    }
+
+    .hs {
+      background-image: url('../../images/hs.svg');
+    }
+  }
+}
