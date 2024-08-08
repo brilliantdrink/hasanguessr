@@ -12,11 +12,13 @@ const config = {
   entryPoints: ['src/index.tsx'],
   bundle: true,
   jsx: 'automatic',
+  inject: ['./src/images/link_preview.png'],
   loader: {
     '.ttf': 'file',
     '.woff': 'file',
     '.woff2': 'dataurl',
     '.webp': 'file',
+    '.png': 'file',
     '.svg': 'dataurl',
     '.mp3': 'file',
     '.txt': 'file',
@@ -51,8 +53,9 @@ const config = {
     {
       name: 'html-file',
       setup(build) {
-        build.onEnd(() => {
+        build.onEnd((result) => {
           const css = fs.readFileSync(path.join(build.initialOptions.outdir, 'index.css'), 'utf8')
+          const prevImage = fs.readdirSync(build.initialOptions.outdir).find(filename => filename.startsWith('link_preview'))
           let html = `\
 <!DOCTYPE html>
 <html lang="en">
@@ -60,6 +63,18 @@ const config = {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HasanGuessr</title>
+    <meta name="theme-color" content="#EEDFC1"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta property="og:image" content="${prevImage}"/>
+    <meta property="og:site_name" content="HasanGuessr"/>
+    <meta property="og:locale" content="en"/>
+    <meta property="og:title" content="HasanGuessr"/>
+    <meta name="twitter:title" content="HasanGuessr"/>
+    <meta name="description" content="Guess the creation date of HasanAbi clips"/>
+    <meta property="og:description" content="Guess the creation date of HasanAbi clips"/>
+    <meta name="twitter:description" content="Guess the creation date of HasanAbi clips"/>
+    <link rel="canonical" href="https://hasanguessr.net"/>
+    <meta property="og:url" content="https://hasanguessr.net"/>
     <style>${css}</style>
     <script src="/index.js" defer></script>
 </head>

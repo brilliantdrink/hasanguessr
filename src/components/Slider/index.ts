@@ -1,1 +1,1 @@
-export {default, steps, Step, isBefore} from './Slider'
+export {default, steps, Step, isBefore, isNotAfter} from './Slider'

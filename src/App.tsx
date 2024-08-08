@@ -1,12 +1,17 @@
-import {createEffect, createMemo, createSignal} from 'solid-js'
+import {createEffect, createMemo, createSignal, onCleanup} from 'solid-js'
 import debounce from 'lodash.debounce'
 import {toast, Toaster} from 'solid-toast'
 import {default as cn} from 'classnames'
-import {IoArrowBackCircleSharp, IoArrowForwardCircleSharp, IoCheckmarkCircleSharp} from 'solid-icons/io'
+import {
+  IoArrowBackCircleSharp,
+  IoArrowForwardCircleSharp,
+  IoCheckmarkCircleSharp,
+  IoCloseCircleSharp
+} from 'solid-icons/io'
 import './style.scss'
 import TwitchEmbed from './components/TwitchEmbed'
 import Header from './components/Header'
-import Slider, {isBefore, steps} from './components/Slider'
+import Slider, {isBefore, isNotAfter, steps} from './components/Slider'
 import Button from './components/Button/Button'
 import {playSound, Sounds} from './sound'
 import createPersistedSignal from './persistedSignal'
@@ -51,6 +56,16 @@ export default function App() {
     }
   })
 
+  createEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.altKey || event.ctrlKey || event.metaKey) return
+      if (event.key === 'Enter') handleSubmitDebounce()
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    onCleanup(() => document.removeEventListener('keydown', handleKeyDown));
+  })
+
   function handleSubmit() {
     playSound(Sounds.Type)
     if (guesses().includes(slideValue())) {
@@ -90,6 +105,8 @@ export default function App() {
     }
   }
 
+  const handleSubmitDebounce = debounce(handleSubmit, 200, {leading: true, trailing: false})
+
   const clipData = createMemo(() => {
     if (!allClips()) return null
     let clip = null, i = 0
@@ -106,6 +123,16 @@ export default function App() {
     const dateStr = clipData()?.[1]
     if (!dateStr) return undefined
     return [dateStr.substring(0, 4), dateStr.substring(5, 7), dateStr.substring(8, 10)].map(Number) as [number, number, number]
+  })
+
+  const won = createMemo(() => {
+    if (!clipDate()) return false
+    const lastGuess = guesses().at(-1)
+    if (!lastGuess) return false
+    const lastGuessStep = steps[lastGuess]
+    console.log(lastGuessStep.startRange, clipDate(), lastGuessStep.endRange)
+    return isNotAfter(lastGuessStep.startRange, clipDate() as [number, number, number]) &&
+      isNotAfter(clipDate() as [number, number, number], lastGuessStep.endRange)
   })
 
   return <>
@@ -132,17 +159,27 @@ export default function App() {
             </div>
           )
         })}
+        {(gameEnded() ?? true) && clipDate() && !won() && <>
+          <div class={cn(styles.guess, styles.answer)}>
+          <span>{
+            steps
+              .find(step =>
+                isNotAfter(step.startRange, clipDate() as [number, number, number]) &&
+                isNotAfter(clipDate() as [number, number, number], step.endRange)
+              )?.label
+          }</span>
+            <IoCloseCircleSharp size={'1.5rem'} />
+          </div>
+        </>}
       </div>
-      {!(gameEnded() ?? true) &&
-        <>
-          <p class={styles.guessesLeft}>{5 - guesses().length} guesses left</p>
-          <Slider value={slideValue} setValue={setSlideValueSilent} />
-          <Button class={styles.button} onClick={debounce(handleSubmit, 200, {leading: true, trailing: false})}>
-            guess
-          </Button>
-        </>
-      }
+      {!(gameEnded() ?? true) && <>
+        <p class={styles.guessesLeft}>{5 - guesses().length} guesses left</p>
+        <Slider value={slideValue} setValue={setSlideValueSilent} />
+        <Button class={styles.button} onClick={handleSubmitDebounce}>
+          guess
+        </Button>
+      </>}
     </div>
-    <Signature class={styles.signature} classSvg={styles.signatureSvg}/>
+    <Signature class={styles.signature} classSvg={styles.signatureSvg} />
   </>
 }

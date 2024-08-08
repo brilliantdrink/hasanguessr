@@ -10,7 +10,7 @@ import soundCelebration from './sounds/celebration.mp3'
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
 const gainNode = audioContext.createGain()
-gainNode.gain.value = .1
+gainNode.gain.value = .15
 
 function loadAudio(url: string) {
   return fetch(url)

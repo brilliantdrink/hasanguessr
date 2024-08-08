@@ -13,6 +13,15 @@ export default function TwitchEmbed({id}: { id: Accessor<string | undefined> }) 
 
   return <>
     <div class={styles.wrapper}>
+      <div class={styles.blocker}>
+        <span>
+          Don't see anything?<br />
+          Allow clips.twitch.tv and assets.twitch.tv in your ad blocker.
+        </span>
+      </div>
+      {!id() ? null :
+        <iframe src={getEmbedUrl(id() as string)} allowfullscreen={true} class={styles.player} />
+      }
       {showWarning() && showWarningPersisted() &&
         <div class={styles.warning}>
           <h2>Beware, Comrade!</h2>
@@ -34,9 +43,6 @@ export default function TwitchEmbed({id}: { id: Accessor<string | undefined> }) 
             Okay
           </Button>
         </div>
-      }
-      {!id() ? null :
-        <iframe src={getEmbedUrl(id() as string)} allowfullscreen={true} class={styles.player} />
       }
     </div>
   </>

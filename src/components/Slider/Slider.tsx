@@ -13,6 +13,10 @@ export function isBefore(a: [number, number, number], b: [number, number, number
   return false
 }
 
+export function isNotAfter(a: [number, number, number], b: [number, number, number]): boolean {
+  return isBefore(a, b) || (a[0] === b[0] && a[1] === b[1] && a[2] === b[2])
+}
+
 const formatMonthIntl = new Intl.DateTimeFormat('en-US', {month: 'long'}).format
 
 function getMonthName(month: number) {

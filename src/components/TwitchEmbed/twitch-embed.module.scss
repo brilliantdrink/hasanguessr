@@ -8,8 +8,46 @@
   width: $width;
   height: $width * math.div(9, 16);
 
+  .blocker {
+    position: absolute;
+    top: 0;
+    width: $width;
+    height: $width * math.div(9, 16);
+    box-sizing: border-box;
+
+    background: colors.$black;
+    border: 4px solid transparentize(colors.$egg, .9);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    span {
+      animation: fade-in .5s 1s ease both;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  }
+
+  .player {
+    position: absolute;
+    top: 0;
+    width: $width;
+    height: $width * math.div(9, 16);
+    border: none;
+  }
+
   .warning {
     position: absolute;
+    top: 0;
     width: $width;
     height: $width * math.div(9, 16);
     box-sizing: border-box;
@@ -79,11 +117,5 @@
     .button {
       align-self: end;
     }
-  }
-
-  .player {
-    border: none;
-    width: $width;
-    height: $width * math.div(9, 16);
   }
 }
