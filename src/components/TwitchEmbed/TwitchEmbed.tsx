@@ -21,7 +21,7 @@ export default function TwitchEmbed({id}: { id: Accessor<string | undefined> }) 
         </span>
       </div>
       {!id() ? null :
-        <iframe src={getEmbedUrl(id() as string)} allowfullscreen={true} class={styles.player} />
+        <iframe src={getEmbedUrl(id() as string)} allowfullscreen class={styles.player} />
       }
       {showWarning() && showWarningPersisted() &&
         <div class={styles.warning}>

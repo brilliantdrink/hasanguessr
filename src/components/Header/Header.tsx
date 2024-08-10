@@ -1,5 +1,9 @@
-import styles from './header.module.scss'
+import {FaSolidHandHoldingHeart} from 'solid-icons/fa'
+import Dialog from '@corvu/dialog'
+
 import IntroDialog from '../IntroDialog'
+
+import styles from './header.module.scss'
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'Juli', 'August', 'September', 'October', 'November', 'December']
 
@@ -12,11 +16,30 @@ export default function Header({helpDialogInitialOpen}: { helpDialogInitialOpen:
       </div>
       <h1><span class={styles.commie}>HASAN</span>GUEssR</h1>
       <div class={styles.group}>
+        <KoFiButton />
         <IntroDialog initialOpen={helpDialogInitialOpen} />
         <a href={'https://github.com/brilliantdrink/hasanguessr'} rel={'noreferrer'} target={'_blank'}
            aria-label={'Github Repository'}><Github /></a>
       </div>
     </header>
+  </>
+}
+
+function KoFiButton() {
+  return <>
+    <Dialog>
+      <Dialog.Trigger class={styles.donate}>
+        <FaSolidHandHoldingHeart size={'1.2rem'} />
+        <span>Support me</span>
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay class={styles.overlay} />
+        <Dialog.Content class={styles.modalKoFi}>
+          <iframe id={'kofiframe'} src={'https://ko-fi.com/brilliant_drink/?hidefeed=true&widget=true&embed=true&preview=true'}
+                  title={'brilliant_drink'} class={styles.iframe}/>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog>
   </>
 }
 

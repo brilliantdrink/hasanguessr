@@ -69,4 +69,47 @@
     display: flex;
     align-items: center;
   }
+
+  .donate {
+    appearance: none;
+    background: none;
+    border: 2px solid transparentize(colors.$black, .8);
+    font-size: 1rem;
+    font-family: 'Jost', sans-serif;
+
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+
+    padding: .3rem 1rem;
+    cursor: pointer;
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+
+  background: transparentize(black, .8);
+  backdrop-filter: blur(1px);
+}
+
+.modalKoFi {
+  position: fixed;
+  top: 4rem + 1rem;
+  right: 1rem;
+
+  .iframe {
+    height: 570px;
+    width: 340px;
+    padding: 0;
+
+    border: 1px solid transparentize(colors.$black, 0);
+    border-radius: 14px;
+    box-shadow: 0 0 40px transparentize(black, 0);
+    background: #f9f9f9;
+  }
 }
