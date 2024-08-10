@@ -5,40 +5,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  .guessesLeft {
+    margin: 0;
+  }
 }
 
 .monthHint {
   font-size: .8rem;
-  margin-bottom: 1rem;
-}
-
-.guesses {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  .guess {
-    padding: .5rem .8rem .5rem 1rem;
-    margin-bottom: 1rem;
-
-    background: colors.$egg;
-    color: colors.$black;
-    font-weight: 500;
-
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-
-    &:last-child svg {
-      fill: colors.$red
-    }
-
-    &.answer {
-      background: colors.$black;
-      border: 2px solid transparentize(colors.$egg, .9);
-      color: colors.$egg;
-    }
-  }
+  margin-top: 0;
+  margin-bottom: .5rem;
 }
 
 .signature {

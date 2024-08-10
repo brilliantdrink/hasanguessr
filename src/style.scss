@@ -26,8 +26,9 @@
   font-display: block;
 }
 
-html, body, #app {
-  height: 100%;
+:root, html, body, #app {
+  min-height: 100%;
+  background: colors.$black;
 }
 
 body {
@@ -39,7 +40,7 @@ body {
 
 #app {
   display: grid;
-  grid-template-rows: min-content min-content auto;
+  grid-auto-rows: min-content;
   grid-template-areas: 'header' 'grid' 'keyboard';
   justify-items: center;
   padding-bottom: 3rem;

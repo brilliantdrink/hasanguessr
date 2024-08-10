@@ -1,4 +1,4 @@
-import {Accessor, createEffect, createSignal, onCleanup, Setter} from 'solid-js'
+import {Accessor, createEffect, createMemo, createSignal, onCleanup, Setter} from 'solid-js'
 import styles from './slider.module.scss'
 import {playSoundThrottled, Sounds} from '../../sound'
 
@@ -32,6 +32,7 @@ export interface Step {
 }
 
 const steps: Step[] = []
+const stepsFine: Step[] = []
 const rangeStart: [number, number, number] = [2018, 3, 23]
 const rangeEnd: [number, number, number] = [2024, 8, 4]
 let monthCursor = rangeStart[1]
@@ -44,46 +45,49 @@ for (let yearCursor = rangeStart[0]; yearCursor <= rangeEnd[0]; yearCursor++) {
       startRange: [yearCursor, monthCursor, 1],
       endRange: [yearCursor, monthCursor, daysInMonth(monthCursor, yearCursor)],
     })
-    /*const earlyEnd: [number, number, number] = [yearCursor, monthCursor, 10]
-    if (isBefore(rangeStart, earlyEnd)) steps.push({
+    const earlyEnd: [number, number, number] = [yearCursor, monthCursor, 10]
+    if (isBefore(rangeStart, earlyEnd)) stepsFine.push({
       label: `early ${monthName} ${yearCursor}`,
       startRange: [yearCursor, monthCursor, 1],
       endRange: earlyEnd,
     })
     const midStart: [number, number, number] = [yearCursor, monthCursor, 11]
     const midEnd: [number, number, number] = [yearCursor, monthCursor, 20]
-    if (isBefore(midStart, rangeEnd) && isBefore(rangeStart, midEnd)) steps.push({
+    if (isBefore(midStart, rangeEnd) && isBefore(rangeStart, midEnd)) stepsFine.push({
       label: `mid ${monthName} ${yearCursor}`,
       startRange: midStart,
       endRange: midEnd,
     })
     const endStart: [number, number, number] = [yearCursor, monthCursor, 21]
-    if (isBefore(endStart, rangeEnd)) steps.push({
+    if (isBefore(endStart, rangeEnd)) stepsFine.push({
       label: `late ${monthName} ${yearCursor}`,
       startRange: endStart,
       endRange: [yearCursor, monthCursor, daysInMonth(monthCursor, yearCursor)],
-    })*/
+    })
     if (yearCursor === rangeEnd[0] && monthCursor === rangeEnd[1]) break
   }
   monthCursor = 1
 }
 
-export {steps}
+export {steps, stepsFine}
 
-export default function Slider({value, setValue: setValueSilent}: {
+export default function Slider({value, setValue: setValueSilent, hardMode}: {
   value: Accessor<number>,
-  setValue: Setter<number>
+  setValue: Setter<number | null>
+  hardMode: Accessor<boolean>
 }) {
   function setValue(value: number) {
     playSoundThrottled(Sounds.Click)
     setValueSilent(value)
   }
 
+  const stepsAdaptive = createMemo(() => !hardMode() ? steps : stepsFine)
+
   createEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.altKey || event.ctrlKey || event.metaKey) return
       if (event.key.startsWith('Arrow')) event.preventDefault()
-      if (event.key === 'ArrowRight' || event.key === 'ArrowUp') setValue(Math.min(value() + 1, steps.length))
+      if (event.key === 'ArrowRight' || event.key === 'ArrowUp') setValue(Math.min(value() + 1, stepsAdaptive().length))
       else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') setValue(Math.max(0, value() - 1))
     }
 
@@ -93,16 +97,16 @@ export default function Slider({value, setValue: setValueSilent}: {
 
   return <>
     <div class={styles.value}>
-      {steps[value()]?.label.split(' ').map(str => <span>{str}&nbsp;</span>)}
+      {stepsAdaptive()[value()]?.label.split(' ').map(str => <span>{str}&nbsp;</span>)}
     </div>
     <div class={styles.wrapper}>
       <div class={styles.slide} />
-      <div class={styles.knob} style={{'--offset': value() / steps.length}}>
+      <div class={styles.knob} style={{'--offset': value() / stepsAdaptive().length}}>
         <div class={styles.cog} />
         <div class={styles.hs} />
         <div class={styles.arrow} />
       </div>
-      <input class={styles.rangeSelect} type={'range'} min={0} max={steps.length - 1} step={1} value={value()}
+      <input class={styles.rangeSelect} type={'range'} min={0} max={stepsAdaptive().length - 1} step={1} value={value()}
              onInput={e => setValue(Number(e.target.value))} />
     </div>
   </>

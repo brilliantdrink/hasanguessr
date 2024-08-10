@@ -1,0 +1,66 @@
+@use '../../colors';
+
+.hardMode {
+  margin-bottom: 1rem;
+  width: 32rem;
+
+  display: flex;
+  justify-content: center;
+
+  .label {
+    position: relative;
+    $height: 4rem;
+    height: $height;
+    $width: 20rem;
+    width: $width;
+
+    $padding: .7rem;
+    box-sizing: border-box;
+
+    $border-size: 2px;
+    border: $border-size solid transparentize(colors.$egg, .8);
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: $height;
+    align-items: center;
+    justify-items: center;
+
+    .image {
+      height: calc(#{$height} - #{$padding} * 2);
+      filter: brightness(.9);
+    }
+
+    $padding: .3rem;
+    $overshoot: 1.2;
+
+    $wrapper-width: calc(#{$width} - #{$padding} * 2 - #{$border-size} * 2);
+    $indicator-wrapper-width: calc(#{$width} / 2 - #{$padding} * 2);
+
+    .indicatorWrapper {
+      position: absolute;
+      top: $padding;
+      left: $padding;
+      height: calc(#{$height} - #{$padding} * 2 - #{$border-size} * 2);
+      width: $wrapper-width;
+
+      box-sizing: border-box;
+      overflow: hidden;
+
+      .indicator {
+        height: calc(100%);
+        width: calc(#{$indicator-wrapper-width} * #{$overshoot});
+        transform: translateX(calc(#{$indicator-wrapper-width} * #{$overshoot - 1} * -1));
+
+        background: colors.$egg;
+        opacity: .1;
+
+        transition: transform .3s cubic-bezier(.8, 0, .4, 1);
+      }
+    }
+
+    .input:checked + .indicatorWrapper .indicator {
+      transform: translateX(calc(#{$wrapper-width} / 2));
+    }
+  }
+}

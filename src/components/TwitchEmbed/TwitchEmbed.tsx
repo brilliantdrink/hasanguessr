@@ -3,6 +3,7 @@ import {Accessor, createSignal} from 'solid-js'
 import Button from '../Button/Button'
 import createPersistedSignal from '../../persistedSignal'
 import {ImCheckmark} from 'solid-icons/im'
+import Guesses from '../Guesses'
 
 const getEmbedUrl = (id: string) => `https://clips.twitch.tv/embed?clip=${id}&parent=${window.location.host}`
 
