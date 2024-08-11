@@ -21,7 +21,7 @@ import clipsDb from '../clips-db.txt'
 const previousGuesses: number[][] = []
 for (var i = 0, len = localStorage.length; i < len; ++i) {
   const key = localStorage.key(i)
-  if (!key || !key.endsWith('guesses')) continue
+  if (!key || !key.endsWith('guesses') || key.startsWith(String(dateNumber))) continue
   previousGuesses.push(JSON.parse(localStorage.getItem(key) as string))
 }
 
