@@ -67,7 +67,7 @@ const config = {
     <title>HasanGuessr</title>
     <meta name="theme-color" content="#EEDFC1"/>
     <meta name="twitter:card" content="summary_large_image"/>
-    <meta property="og:image" content="${prevImage}"/>
+    <meta property="og:image" content="https://hasanguessr.net/${prevImage}"/>
     <meta property="og:site_name" content="HasanGuessr"/>
     <meta property="og:locale" content="en"/>
     <meta property="og:title" content="HasanGuessr"/>
