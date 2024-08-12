@@ -12,7 +12,7 @@ const config = {
   entryPoints: ['src/index.tsx'],
   bundle: true,
   jsx: 'automatic',
-  inject: ['./src/images/link_preview.png'],
+  inject: ['./src/images/link_preview.png', './src/images/favicon.webp'],
   loader: {
     '.ttf': 'file',
     '.woff': 'file',
@@ -56,12 +56,14 @@ const config = {
         build.onEnd((result) => {
           const css = fs.readFileSync(path.join(build.initialOptions.outdir, 'index.css'), 'utf8')
           const prevImage = fs.readdirSync(build.initialOptions.outdir).find(filename => filename.startsWith('link_preview'))
+          const favicon = fs.readdirSync(build.initialOptions.outdir).find(filename => filename.startsWith('favicon'))
           let html = `\
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="${favicon}" type="image/webp" />
     <title>HasanGuessr</title>
     <meta name="theme-color" content="#EEDFC1"/>
     <meta name="twitter:card" content="summary_large_image"/>
