@@ -7,12 +7,16 @@ import autoprefixer from 'autoprefixer'
 import postcssModules from 'postcss-modules'
 import {solidPlugin} from 'esbuild-plugin-solid'
 import {svgo} from '@hyrious/esbuild-plugin-svgo'
+const packageJson = (await import('./package.json', {with: { type: 'json' }})).default
 
 const config = {
   entryPoints: ['src/index.tsx'],
   bundle: true,
   jsx: 'automatic',
   inject: ['./src/images/link_preview.png', './src/images/favicon.webp'],
+  define: {
+    'VERSION': JSON.stringify(packageJson.version),
+  },
   loader: {
     '.ttf': 'file',
     '.woff': 'file',

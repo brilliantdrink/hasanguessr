@@ -1,6 +1,9 @@
+declare var VERSION: string
+
 export default function Signature(props: { class: string, classSvg: string }) {
   return <>
     <div class={props.class}>
+      <p>v{VERSION}</p>
       <p>Concept by TheGiantEwok&nbsp;&&nbsp;torinblink</p>
       <p>Hasan sample by jacobjohns_</p>
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 713 486" class={props.classSvg}
