@@ -14,7 +14,7 @@ import ModeSwitch from './components/ModeSwitch'
 import HardModeDialog from './components/HardModeDialog'
 import createPersistedSignal from './persistedSignal'
 import {makeSubmitDebouncedHandler} from './submit-guess'
-import {dateNumber, randomForDate, randomForToday} from './pseudo-random'
+import {dateNumber, randomForDate, randomForDateOld, randomForToday} from './pseudo-random'
 
 import clipsDb from '../clips-db.txt'
 
@@ -44,19 +44,27 @@ for (let i = 0, len = localStorage.length; i < len; ++i) {
   // this only happened for 8.8.2024 - 12.8.2024
   if (thenDateNumberString.length === 6) thenDateNumberString = '0' + thenDateNumberString
   if (thenDateNumberString.length === 7) thenDateNumberString = thenDateNumberString.substring(0, 2) + '0' + thenDateNumberString.substring(2)
+  // console.log(thenDateNumberString)
   const thenDate = new Date(Number(thenDateNumberString.substring(4)), Number(thenDateNumberString.substring(2, 4)), Number(thenDateNumberString.substring(0, 2)))
   const hardMode = localStorage.getItem(thenDateNumberVal + '_hard_mode') ?? false
   clipPromises.push(clips.then(clips => {
-    let clip = null, j = 0
-    // console.log(clips[Math.floor(randomForDate(thenDate, j++, false) * clips.length)])
-    do clip = clips[Math.floor(randomForDate(thenDate, j++, false) * clips.length)]; while (!clip)
+    let clip = null, clipOld = null, j = 0
+    do clip = clips[Math.floor(randomForDate(new Date(thenDate.valueOf()), j++, false) * clips.length)]; while (!clip)
+    j = 0
+    do clipOld = clips[Math.floor(randomForDateOld(new Date(thenDate.valueOf()), j++, false) * clips.length)]; while (!clipOld)
+    // console.log(clip, clipOld)
     const lastGuessOfDate = (!hardMode ? steps : stepsFine)[guess.at(-1)]
     const dateStr = clip[1]
-    if (!dateStr) return undefined
-    const clipDate = [dateStr.substring(0, 4), dateStr.substring(5, 7), dateStr.substring(8, 10)].map(Number) as [number, number, number]
+    const dateStrOld = clipOld[1]
+    if (!dateStr && !dateStrOld) return undefined
+    const clipDate = [dateStr?.substring(0, 4), dateStr?.substring(5, 7), dateStr?.substring(8, 10)].map(Number) as [number, number, number]
+    const clipDateOld = [dateStrOld?.substring(0, 4), dateStrOld?.substring(5, 7), dateStrOld?.substring(8, 10)].map(Number) as [number, number, number]
     const guessCorrect = isNotAfter(lastGuessOfDate.startRange, clipDate) &&
       isNotAfter(clipDate, lastGuessOfDate.endRange)
-    if (guessCorrect) previousCorrectGuessesAmount++
+    const guessCorrectOld = isNotAfter(lastGuessOfDate.startRange, clipDateOld) &&
+      isNotAfter(clipDateOld, lastGuessOfDate.endRange)
+    // console.log(thenDate, guessCorrect, guessCorrectOld, guess, lastGuessOfDate, clipDate)
+    if (guessCorrect || guessCorrectOld) previousCorrectGuessesAmount++
   }))
 }
 Promise.all(clipPromises).then(() => setWasTooGood(previousCorrectGuessesAmount >= 3))

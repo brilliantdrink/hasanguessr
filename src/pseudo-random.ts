@@ -16,8 +16,17 @@ export const dateNumber = Number(
 ) * 200
 
 export const randomForToday = (iter: number) => lcg(a, c, m, Number(iter + String(dateNumber)))
-export const randomForDate = (date: Date, iter: number, shift: boolean = true) => {
+export const randomForDateOld = (date: Date, iter: number, shift: boolean = true) => {
   if (shift) date.setDate(date.getDate() + 5)
   const dateNumber = Number(String(date.getDate()) + String(date.getMonth()) + String(date.getFullYear())) * 200
+  return lcg(a, c, m, Number(iter + String(dateNumber)))
+}
+export const randomForDate = (date: Date, iter: number, shift: boolean = true) => {
+  if (shift) date.setDate(date.getDate() + 5)
+  const dateNumber = Number(
+    String(date.getDate()).padStart(2, '0') +
+    String(date.getMonth()).padStart(2, '0') +
+    String(date.getFullYear())
+  ) * 200
   return lcg(a, c, m, Number(iter + String(dateNumber)))
 }
