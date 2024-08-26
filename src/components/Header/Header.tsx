@@ -16,7 +16,7 @@ export default function Header({helpDialogInitialOpen}: { helpDialogInitialOpen:
       </div>
       <h1><span class={styles.commie}>HASAN</span>GUEssR</h1>
       <div class={styles.group}>
-        <KoFiButton />
+        {/*<KoFiButton />*/}
         <IntroDialog initialOpen={helpDialogInitialOpen} />
         <a href={'https://github.com/brilliantdrink/hasanguessr'} rel={'noreferrer'} target={'_blank'}
            aria-label={'Github Repository'}><Github /></a>

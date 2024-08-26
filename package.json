@@ -1,6 +1,6 @@
 {
   "name": "hasanguessr",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -29,6 +29,7 @@
     "solid-toast": "^0.5.0"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.6.4",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
     "dotenv": "^16.4.5"

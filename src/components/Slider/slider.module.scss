@@ -95,6 +95,10 @@
       transform: rotate(calc(var(--offset) * 360deg * 2));
     }
 
+    &.fine .cog {
+      transform: rotate(calc(var(--offset) * 360deg * 4));
+    }
+
     .hs {
       background-image: url('../../images/hs.svg');
     }

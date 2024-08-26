@@ -1,12 +1,56 @@
 @use 'sass:math';
 @use '../../colors';
 
-.wrapper {
-  position: relative;
+$width: 32rem;
+$player-button-gap: 1rem;
+$button-height: 2rem;
+
+.place {
   margin-top: 4rem;
-  $width: 32rem;
   width: $width;
-  height: $width * math.div(9, 16);
+  height: calc(#{$width * math.div(9, 16)} + $player-button-gap + $button-height);
+}
+
+.wrapper {
+  position: absolute;
+  top: 4rem + 4rem;
+  left: 50%;
+  width: $width;
+  height: calc(#{$width * math.div(9, 16)} + $player-button-gap + $button-height);
+
+  transform: translateX(-50%) translateY(0);
+
+  &, .blocker, .player, .warning {
+    $size-timing: cubic-bezier(.4, 0, .2, 1);
+    $duration: .4s;
+    transition: height #{$duration}, width #{$duration}, transform #{$duration}, box-shadow .5s;
+    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .blocker {
+    box-shadow: 0 0 0 transparentize(black, .5);
+  }
+
+  &.scaled {
+    $max-width: calc(100vw - 4rem);
+    $max-height: calc(100vh - 4rem);
+    $width-scaled: min(#{$max-width}, calc(calc(#{$max-height} - $player-button-gap - $button-height) * (16 / 9)));
+    $height-scaled: min(#{$max-height}, calc(#{$max-width} * (9 / 16) + $player-button-gap + $button-height));
+    width: $width-scaled;
+    height: $height-scaled;
+    transform: translateX(-50%) translateY(calc(0rem - 4rem - 4rem + 2rem));
+
+    z-index: 1;
+
+    .blocker {
+      box-shadow: 0 0 3rem transparentize(black, .3);
+    }
+
+    .blocker, .player, .warning {
+      width: $width-scaled;
+      height: calc(#{$width-scaled} * (9 / 16));
+    }
+  }
 
   .blocker {
     position: absolute;
@@ -45,13 +89,28 @@
     border: none;
   }
 
+  .expand {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: $button-height;
+
+    font-size: .7rem;
+    letter-spacing: .1ch;
+
+    .icon {
+      font-size: 1rem;
+    }
+  }
+
   .warning {
     position: absolute;
     top: 0;
     width: $width;
     height: $width * math.div(9, 16);
     box-sizing: border-box;
-    padding: 2rem;
+    $padding: 2rem;
+    padding: $padding max($padding, calc((100% - (#{$width} - #{$padding} * 2)) / 2));
 
     background: colors.$egg;
     color: colors.$black;

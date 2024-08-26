@@ -1,5 +1,5 @@
 import Dialog from '@corvu/dialog'
-import {IoHelp, IoHelpSharp} from 'solid-icons/io'
+import {IoHelpSharp} from 'solid-icons/io'
 
 import styles from './intro-dialog.module.scss'
 
@@ -21,7 +21,7 @@ export default function IntroDialog({initialOpen}: { initialOpen: boolean }) {
           <ol>
             <li>Read the whole of “Das Kapital”</li>
             <li>Watch EVERY HasanAbi VOD (optional)</li>
-            <li>Convert at least one person to Communism / Socialism</li>
+            <li>Convert at least one person to communism / socialism</li>
           </ol>
           <h3>Gameplay</h3>
           <p>Watch the clip shown on screen.</p>

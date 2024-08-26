@@ -5,9 +5,10 @@ import debounce from 'lodash.debounce'
 
 import {playSound, Sounds} from './sound'
 import celebrate from './confetti-calls'
-import {isBefore, Step} from './components/Slider'
+import {Step} from './components/Slider'
 import toastStyles from './toast.module.scss'
 import {dateNumber} from './pseudo-random'
+import {getGuessDistance, isBefore} from './utils'
 
 interface MakeSubmitHandlerProps {
   guesses: Accessor<number[]>
@@ -40,13 +41,8 @@ export const makeSubmitHandler = (
     const clipDate_ = clipDate()
     if (!clipDate_) return
     if (isBefore(step.endRange, clipDate_) || isBefore(clipDate_, step.startRange)) {
-      const rangeStartVal = (new Date(...step.startRange)).valueOf()
-      const rangeEndVal = (new Date(...step.endRange)).valueOf()
-      const middle = (rangeEndVal - rangeStartVal) / 2 + rangeStartVal
-      const clipDateVal = (new Date(...clipDate_)).valueOf()
-      const distance = Math.abs(clipDateVal - middle)
-      const distanceDays = distance / 1000 / 60 / 60 / 24
       setTimeout(() => {
+        const distanceDays = getGuessDistance(clipDate_, step)
         if (distanceDays < 300) playSound(Sounds.Affirmation2)
         else playSound(Sounds.Affirmation1)
       }, 100)

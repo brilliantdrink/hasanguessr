@@ -20,9 +20,10 @@ const config = {
   loader: {
     '.ttf': 'file',
     '.woff': 'file',
-    '.woff2': 'dataurl',
+    '.woff2': 'file',
     '.webp': 'file',
     '.png': 'file',
+    '.jpg': 'file',
     '.svg': 'dataurl',
     '.mp3': 'file',
     '.txt': 'file',
@@ -81,8 +82,8 @@ const config = {
     <meta name="twitter:description" content="Guess the creation date of HasanAbi clips"/>
     <link rel="canonical" href="https://hasanguessr.net"/>
     <meta property="og:url" content="https://hasanguessr.net"/>
-    <style>${css}</style>
     <script src="/index.js" defer></script>
+    <style>${css}</style>
 </head>
 <body>
     <div id="app">

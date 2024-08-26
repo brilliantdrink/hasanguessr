@@ -6,13 +6,15 @@ import {
   IoCloseCircleSharp
 } from 'solid-icons/io'
 import {default as cn} from 'classnames'
-import {isBefore, isNotAfter, steps, stepsFine} from '../Slider'
+import {steps, stepsFine} from '../Slider'
+import {IoArrowTwoHeadBackCircleSharp, IoArrowTwoHeadForwardCircleSharp} from '../icons/IoArrowTwoHeadCircleSharp'
+import {DateVec, getGuessDistance, isBefore, isNotAfter} from '../../utils'
 
 import styles from './guesses.module.scss'
 
 interface GuessesProps {
   guesses: Accessor<number[]>
-  clipDate: Accessor<[number, number, number] | undefined>
+  clipDate: Accessor<DateVec | undefined>
   won: Accessor<boolean>
   gameEnded: Accessor<boolean | null>
   hardMode: Accessor<boolean>
@@ -26,10 +28,15 @@ export default function Guesses({guesses, clipDate, won, gameEnded, hardMode}: G
         const step = stepsAdaptive()[stepIndex]
         const clipDateVal = clipDate()
         let arrow
+        const distanceDays = clipDateVal && getGuessDistance(clipDateVal, step)
         if (clipDateVal && isBefore(step.endRange, clipDateVal))
-          arrow = <IoArrowForwardCircleSharp size={'1.5rem'} />
+          arrow = distanceDays && distanceDays < 300
+            ? <IoArrowForwardCircleSharp size={'1.5rem'} />
+            : <IoArrowTwoHeadForwardCircleSharp size={'1.5rem'} />
         else if (clipDateVal && isBefore(clipDateVal, step.startRange))
-          arrow = <IoArrowBackCircleSharp size={'1.5rem'} />
+          arrow = distanceDays && distanceDays < 300
+            ? <IoArrowBackCircleSharp size={'1.5rem'} />
+            : <IoArrowTwoHeadBackCircleSharp size={'1.5rem'} />
         else
           arrow = <IoCheckmarkCircleSharp size={'1.5rem'} />
         return (

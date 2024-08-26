@@ -1,29 +1,8 @@
 import {Accessor, createEffect, createMemo, createSignal, onCleanup, Setter} from 'solid-js'
+import {default as cn} from 'classnames'
 import styles from './slider.module.scss'
 import {playSoundThrottled, Sounds} from '../../sound'
-
-function daysInMonth(month: number, year: number) {
-  return new Date(year, month, 0).getDate()
-}
-
-export function isBefore(a: [number, number, number], b: [number, number, number]): boolean {
-  if (a[0] < b[0]) return true
-  else if (a[0] === b[0] && a[1] < b[1]) return true
-  else if (a[0] === b[0] && a[1] === b[1] && a[2] < b[2]) return true
-  return false
-}
-
-export function isNotAfter(a: [number, number, number], b: [number, number, number]): boolean {
-  return isBefore(a, b) || (a[0] === b[0] && a[1] === b[1] && a[2] === b[2])
-}
-
-const formatMonthIntl = new Intl.DateTimeFormat('en-US', {month: 'long'}).format
-
-function getMonthName(month: number) {
-  const date = new Date()
-  date.setMonth(month - 1)
-  return formatMonthIntl(date)
-}
+import {daysInMonth, getMonthName, isBefore} from '../../utils'
 
 export interface Step {
   label: string,
@@ -101,7 +80,7 @@ export default function Slider({value, setValue: setValueSilent, hardMode}: {
     </div>
     <div class={styles.wrapper}>
       <div class={styles.slide} />
-      <div class={styles.knob} style={{'--offset': value() / stepsAdaptive().length}}>
+      <div class={cn(styles.knob, hardMode() && styles.fine)} style={{'--offset': value() / stepsAdaptive().length}}>
         <div class={styles.cog} />
         <div class={styles.hs} />
         <div class={styles.arrow} />
