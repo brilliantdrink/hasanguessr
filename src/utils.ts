@@ -32,6 +32,7 @@ const formatMonthIntl = new Intl.DateTimeFormat('en-US', {month: 'long'}).format
 
 export function getMonthName(month: number) {
   const date = new Date()
+  date.setDate(1)
   date.setMonth(month - 1)
   return formatMonthIntl(date)
 }
