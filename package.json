@@ -1,6 +1,6 @@
 {
   "name": "hasanguessr",
-  "version": "1.1.8",
+  "version": "1.1.8+M",
   "main": "index.js",
   "type": "module",
   "scripts": {
