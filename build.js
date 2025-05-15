@@ -11,11 +11,13 @@ const packageJson = (await import('./package.json', {with: { type: 'json' }})).d
 
 const config = {
   entryPoints: ['src/index.tsx'],
+  platform: 'browser',
   bundle: true,
   jsx: 'automatic',
   inject: ['./src/images/link_preview.png', './src/images/favicon.webp'],
   define: {
     'VERSION': JSON.stringify(packageJson.version),
+    'BUILD_OPTIONS': JSON.stringify(packageJson.version.match(/\d+\.\d+\.\d+\+?(.+)?/)[1]),
   },
   loader: {
     '.ttf': 'file',

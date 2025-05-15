@@ -7,6 +7,8 @@ import styles from './header.module.scss'
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'Juli', 'August', 'September', 'October', 'November', 'December']
 
+declare const BUILD_OPTIONS: string
+
 export default function Header({helpDialogInitialOpen}: { helpDialogInitialOpen: boolean }) {
   const date = new Date()
   return <>
@@ -16,7 +18,7 @@ export default function Header({helpDialogInitialOpen}: { helpDialogInitialOpen:
       </div>
       <h1><span class={styles.commie}>HASAN</span>GUEssR</h1>
       <div class={styles.group}>
-        <KoFiButton />
+        {BUILD_OPTIONS.includes('M') && <KoFiButton />}
         <IntroDialog initialOpen={helpDialogInitialOpen} />
         <a href={'https://github.com/brilliantdrink/hasanguessr'} rel={'noreferrer'} target={'_blank'}
            aria-label={'Github Repository'}><Github /></a>

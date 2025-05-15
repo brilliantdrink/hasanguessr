@@ -15,7 +15,9 @@
   }
 
   .guess {
-    padding: .5rem .8rem .5rem 1rem;
+    position: relative;
+    $padding-y: .5rem;
+    padding: $padding-y .8rem $padding-y 1rem;
 
     background: colors.$egg;
     color: colors.$black;
@@ -24,6 +26,37 @@
     display: flex;
     align-items: center;
     gap: .5rem;
+
+    &:hover {
+      small {
+        opacity: 1;
+      }
+    }
+
+    small {
+      position: absolute;
+      $height: 1.2rem;
+      top: -$height - .2rem;
+      height: $height;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0 .4rem;
+
+      font-size: .6rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05ch;
+      text-wrap: nowrap;
+      opacity: 0;
+      transition: opacity .3s;
+
+      background: colors.$red;
+      color: colors.$egg;
+
+      display: flex;
+      align-items: center;
+      pointer-events: none;
+    }
 
     &:last-child {
       svg {

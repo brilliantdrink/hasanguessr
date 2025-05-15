@@ -1,9 +1,10 @@
-import {Accessor, createSignal} from 'solid-js'
+import {Accessor, createMemo, createSignal} from 'solid-js'
 import {ImCheckmark} from 'solid-icons/im'
 import {CgArrowsExpandRight, CgCompressRight} from 'solid-icons/cg'
 import {default as cn} from 'classnames'
-import Button from '../Button/Button'
+import Button from '../Button'
 import createPersistedSignal from '../../persistedSignal'
+import {useClipsMeta} from '../../utils'
 
 import styles from './twitch-embed.module.scss'
 
@@ -15,6 +16,12 @@ export default function TwitchEmbed({id}: { id: Accessor<string | undefined> }) 
   const [input, setInput] = createSignal(false)
 
   const [videoScaled, setVideoScaled] = createSignal(false)
+  const [clipsMeta] = useClipsMeta()
+  const formattedClipsAmount = createMemo(() => {
+    const _clipsMeta = clipsMeta()
+    if (!_clipsMeta) return null
+    return (Math.floor(_clipsMeta.clipsLength / 5000) * 5) + 'K+'
+  })
 
   return <>
     <div class={cn(styles.place)}>
@@ -30,7 +37,7 @@ export default function TwitchEmbed({id}: { id: Accessor<string | undefined> }) 
           <div class={styles.warning}>
             <h2>Beware, Comrade!</h2>
             <p>
-              Due to the length of the list of clips (95K+), it is impossible to check if every single one is TOS
+              Due to the length of the list of clips ({formattedClipsAmount()}), it is impossible to check if every single one is TOS
               friendly.
               Please check yourself before showing on stream!
             </p>

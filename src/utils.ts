@@ -1,7 +1,8 @@
 import {dateNumber, randomForDate} from './pseudo-random'
 import {Step, steps, stepsFine} from './components/Slider'
 
-import clipsDb from '../clips-db.txt'
+import clipsDbIndexFile from '../clips-db_index.txt'
+import {createResource} from 'solid-js'
 
 export function daysInMonth(month: number, year: number) {
   return new Date(year, month, 0).getDate()
@@ -37,91 +38,61 @@ export function getMonthName(month: number) {
   return formatMonthIntl(date)
 }
 
-export function parseDateNumber(number: string /* lol */) {
-  let numberString = String(Number(number) / 200)
-  // this only happened for 8.8.2024 - 12.8.2024
-  if (numberString.length === 6) numberString = '0' + numberString
-  if (numberString.length === 7) numberString = numberString.substring(0, 2) + '0' + numberString.substring(2)
+export type ClipData = [string, string]
 
-  return new Date(Number(numberString.substring(4)), Number(numberString.substring(2, 4)), Number(numberString.substring(0, 2)))
-}
-
-let clipSync: ([string, string, string, string] | null)[]
-export const clips = fetch(clipsDb)
-  .then(res => res.text())
-  .then(text =>
-    text.split('\n')
-      .map(line => line.startsWith('!')
-        ? null
-        : line.split(' ') /* todo do this later */
-      ) as ([string, string, string, string] | null)[]
-  )
-  .then(clips => {
-    clipSync = clips
-    return clips
-  })
-
-export type ClipData = [string, string, string, string]
-
-function getClipForDateBase(date: Date, shift: boolean, clips: (ClipData | null)[], old: boolean) {
+async function getClipForDateBase(date: Date, shift: boolean, old: boolean) {
+  const clipsDbIndex = await fetch(clipsDbIndexFile).then(res => res.text())
   let clip = null, i = 0
-  const clipsLength = clips.length
+  const clipsLength = Number(clipsDbIndex.split(' ')[0])
+  const clipsPageSize = Number(clipsDbIndex.split(' ')[1])
   do {
     const clipIndex = Math.floor(randomForDate(date, i++, shift, old) * clipsLength)
-    clip = clips[clipIndex]
+    const clipsDbFile = (await import((`../clips-db_${Math.floor(clipIndex / clipsPageSize).toString().padStart(3, '0')}.txt`))).default
+    const clipsDb = await fetch(clipsDbFile).then(res => res.text())
+    clip = clipsDb.split('\n')[clipIndex % clipsPageSize].split(' ')
   } while (!clip)
   return clip
 }
 
-export async function getClipForDate(date: Date, shift = true, old = false) {
-  return getClipForDateBase(date, shift, await clips, old)
+export function getClipForDate(date: Date, shift = true, old = false) {
+  return getClipForDateBase(date, shift, old)
 }
 
-export function getClipForDateSync(date: Date, shift = true, old = false) {
-  return clipSync ? getClipForDateBase(date, shift, clipSync, old) : null
+export function useClipsMeta() {
+  return createResource(
+    async () => {
+      const clipsDbIndex = await fetch(clipsDbIndexFile).then(res => res.text())
+      const clipsLength = Number(clipsDbIndex.split(' ')[0])
+      const clipsPageSize = Number(clipsDbIndex.split(' ')[1])
+      return {clipsLength, clipsPageSize}
+    }
+  )
+}
+
+export function useClipForDate(date: Date, shift: boolean, old: boolean) {
+  const [clipsMeta] = useClipsMeta()
+  return createResource(
+    clipsMeta,
+    async (clipsMeta) => {
+      let clip = null, i = 0
+      do {
+        const clipIndex = Math.floor(randomForDate(date, i++, shift, old) * clipsMeta.clipsLength)
+        const clipsDbFile = (await import((`../clips-db_${Math.floor(clipIndex / clipsMeta.clipsPageSize).toString().padStart(3, '0')}.txt`))).default
+        const clipsDb = await fetch(clipsDbFile).then(res => res.text())
+        clip = clipsDb.split('\n')[clipIndex % clipsMeta.clipsPageSize].split(' ')
+      } while (!clip)
+      return clip
+    }
+  )
+}
+
+export function useClipForToday(shift = true, old = false) {
+  return useClipForDate(new Date(), shift, old)
 }
 
 export async function getClipForToday(shift = true, old = false) {
   return await getClipForDate(new Date(), shift, old)
 }
-
-export function getClipForTodaySync(shift = true, old = false) {
-  return getClipForDateSync(new Date(), shift, old)
-}
-
-let setWasTooGood: (value: boolean) => void
-export const wasTooGoodPromise = new Promise<boolean>(res => setWasTooGood = res)
-
-let previousCorrectGuessesAmount = 0
-
-const digitRegex = /\d+/
-
-clips.then(() => {
-  for (let i = 0, len = localStorage.length; i < len; ++i) {
-    const key = localStorage.key(i)
-    if (!key || !key.endsWith('guesses') || key.startsWith(String(dateNumber))) continue
-    const guess = JSON.parse(localStorage.getItem(key) as string)
-    if (guess.length > 2) continue
-    const thenDateNumberVal = (key.match(digitRegex) as RegExpMatchArray)[0]
-    const thenDate = parseDateNumber(thenDateNumberVal)
-    const hardMode = localStorage.getItem(thenDateNumberVal + '_hard_mode') ?? false
-    const clip = getClipForDateSync(thenDate, false) as ClipData
-    const clipOld = getClipForDateSync(thenDate, false, true) as ClipData
-    const lastGuessOfDate = (!hardMode ? steps : stepsFine)[guess.at(-1)]
-    const dateStr = clip[1]
-    const dateStrOld = clipOld[1]
-    if (!dateStr && !dateStrOld) return undefined
-    const clipDate = timeStringToDateVec(dateStr)
-    const clipDateOld = timeStringToDateVec(dateStrOld)
-    const guessCorrect = dateVecIsInStepRange(clipDate, lastGuessOfDate)
-    const guessOldCorrect = dateVecIsInStepRange(clipDateOld, lastGuessOfDate)
-    if (guessCorrect || guessOldCorrect) previousCorrectGuessesAmount++
-    if (previousCorrectGuessesAmount >= 3) {
-      setWasTooGood(true)
-      break
-    }
-  }
-})
 
 export function getGuessDistance(clipDate: DateVec, step: Step) {
   const rangeStartVal = (new Date(...step.startRange)).valueOf()

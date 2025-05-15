@@ -7,8 +7,8 @@
   height: 100%;
   width: 100%;
 
-  background: transparentize(black, .6);
-  backdrop-filter: blur(15px);
+  background: transparentize(#111, .5);
+  backdrop-filter: blur(5px);
 }
 
 .modal {

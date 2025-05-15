@@ -20,11 +20,15 @@ $button-height: 2rem;
 
   transform: translateX(-50%) translateY(0);
 
+  z-index: 0;
+
+  $size-timing-function: cubic-bezier(.4, 0, .2, 1);
+
   &, .blocker, .player, .warning {
     $size-timing: cubic-bezier(.4, 0, .2, 1);
     $duration: .4s;
-    transition: height #{$duration}, width #{$duration}, transform #{$duration}, box-shadow .5s;
-    transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+    transition: height #{$duration}, width #{$duration}, transform #{$duration}, box-shadow .5s, z-index #{$duration};
+    transition-timing-function: #{$size-timing-function}, #{$size-timing-function}, #{$size-timing-function}, #{$size-timing-function}, step-end;
   }
 
   .blocker {
@@ -39,6 +43,7 @@ $button-height: 2rem;
     width: $width-scaled;
     height: $height-scaled;
     transform: translateX(-50%) translateY(calc(0rem - 4rem - 4rem + 2rem));
+    transition-timing-function: #{$size-timing-function}, #{$size-timing-function}, #{$size-timing-function}, #{$size-timing-function}, step-start;
 
     z-index: 1;
 

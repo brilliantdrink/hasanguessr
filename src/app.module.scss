@@ -24,6 +24,7 @@
   right: 1rem;
 
   opacity: .2;
+  cursor: default;
 
   //pointer-events: none;
 
@@ -37,5 +38,51 @@
 
   p {
     margin: 0 1rem .5rem 0;
+  }
+}
+
+.share {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+
+  .text {
+    padding: .5rem 1rem;
+    background: mix(colors.$black, colors.$egg, 93%);
+  }
+
+  .button {
+    height: auto;
+    margin: 0;
+    font-size: .8rem;
+  }
+
+  .confirmation {
+    $height: 1.2rem;
+    position: absolute;
+    bottom: -$height - .3rem;
+    right: 0;
+    height: $height;
+    padding: 0 .4rem;
+    background: colors.$egg;
+    color: colors.$black;
+
+    display: flex;
+    align-items: center;
+
+    font-size: .6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    animation: flash .5s 1s both;
+  }
+}
+
+@keyframes flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }

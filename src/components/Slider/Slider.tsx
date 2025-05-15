@@ -13,7 +13,7 @@ export interface Step {
 const steps: Step[] = []
 const stepsFine: Step[] = []
 const rangeStart: [number, number, number] = [2018, 3, 23]
-const rangeEnd: [number, number, number] = [2024, 8, 4]
+const rangeEnd: [number, number, number] = [2025, 5, 3]
 let monthCursor = rangeStart[1]
 
 for (let yearCursor = rangeStart[0]; yearCursor <= rangeEnd[0]; yearCursor++) {

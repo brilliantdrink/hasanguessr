@@ -29,6 +29,7 @@ export default function Guesses({guesses, clipDate, won, gameEnded, hardMode}: G
         const clipDateVal = clipDate()
         let arrow
         const distanceDays = clipDateVal && getGuessDistance(clipDateVal, step)
+        let isCorrect = false
         if (clipDateVal && isBefore(step.endRange, clipDateVal))
           arrow = distanceDays && distanceDays < 300
             ? <IoArrowForwardCircleSharp size={'1.5rem'} />
@@ -37,10 +38,13 @@ export default function Guesses({guesses, clipDate, won, gameEnded, hardMode}: G
           arrow = distanceDays && distanceDays < 300
             ? <IoArrowBackCircleSharp size={'1.5rem'} />
             : <IoArrowTwoHeadBackCircleSharp size={'1.5rem'} />
-        else
+        else {
           arrow = <IoCheckmarkCircleSharp size={'1.5rem'} />
+          isCorrect = true
+        }
         return (
           <div class={styles.guess}>
+            {!isCorrect && clipDateVal && <small>guess {isBefore(step.endRange, clipDateVal) ? 'later' : 'earlier'}</small>}
             <span>{step.label}</span>
             {arrow}
           </div>

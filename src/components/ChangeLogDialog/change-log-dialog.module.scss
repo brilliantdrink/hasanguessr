@@ -1,0 +1,124 @@
+@use '../modal.common';
+@use '../../colors';
+
+.hint {
+  position: fixed;
+  top: 5rem;
+  left: 1rem;
+  //width: 16rem;
+  padding: 1rem;
+
+  background: colors.$egg;
+  color: colors.$black;
+  box-shadow: 0 0 1rem .1rem black;
+
+  display: flex;
+  flex-direction: column;
+
+  cursor: pointer;
+
+  .timer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: .3rem;
+    appearance: none;
+
+    color: colors.$red;
+    background: none;
+    border: none;
+
+    &::-moz-progress-bar {
+      background: colors.$red;
+    }
+
+    &::-webkit-progress-bar {
+      background: none;
+    }
+
+    &::-webkit-progress-value {
+      background: colors.$red;
+    }
+  }
+
+  .headline {
+    margin: 0;
+    font-weight: bold;
+  }
+
+  small {
+    opacity: .6;
+  }
+}
+
+.modal {
+  //top: 4rem + 2rem;
+  //left: 2rem;
+  //transform: translate(0);
+  //padding: 0;
+
+  background: colors.$black;
+  color: colors.$egg;
+  border: 3px solid transparentize(colors.$egg, .7);
+  box-shadow: 0 .2rem 1rem .2rem transparentize(black, .5);
+
+  .close {
+    top: -3px;
+    background: colors.$red;
+
+    &:after {
+      color: colors.$black;
+    }
+  }
+
+  .inlineImage {
+    height: 1.8em;
+    vertical-align: middle;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: left;
+    letter-spacing: .1ch;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 1rem 1rem 0;
+
+    color: colors.$red;
+  }
+
+  small {
+    font-size: .7rem;
+    letter-spacing: .05ch;
+    opacity: .7;
+  }
+
+  h3, p, small {
+    margin: 0 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  h3, p {
+    font-size: 1rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: .5rem;
+  }
+
+  > :last-child {
+    margin-bottom: 1rem;
+  }
+
+  hr {
+    width: calc(100% - 2rem);
+    border: none;
+    border-top: 1px solid transparentize(colors.$egg, 0.2);
+  }
+}
