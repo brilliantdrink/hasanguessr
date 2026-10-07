@@ -17,7 +17,7 @@ const config = {
   inject: ['./src/images/link_preview.png', './src/images/favicon.webp'],
   define: {
     'VERSION': JSON.stringify(packageJson.version),
-    'BUILD_OPTIONS': JSON.stringify(packageJson.version.match(/\d+\.\d+\.\d+\+?(.+)?/)[1]),
+    'BUILD_OPTIONS': JSON.stringify(packageJson.version.match(/\d+\.\d+\.\d+\+?(.+)?/)?.[1] ?? ''),
   },
   loader: {
     '.ttf': 'file',

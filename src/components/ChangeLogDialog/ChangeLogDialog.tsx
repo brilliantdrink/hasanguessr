@@ -1,11 +1,12 @@
 import {Accessor, createSignal, onMount, Setter, Show} from 'solid-js'
 import Dialog from '@corvu/dialog'
+import cn from 'classnames'
 
 import styles from './change-log-dialog.module.scss'
 
 declare const VERSION: string
 
-const HINT_DURATION: number = 1000 * 30
+const HINT_DURATION: number = 1000 * 12
 
 interface ChangeLogDialogProps {
   open: Accessor<boolean>
@@ -17,6 +18,7 @@ export default function ChangeLogDialog(props: ChangeLogDialogProps) {
 
   const [showHint, setShowHint] = createSignal(initialOpen)
   const [timer, setTimer] = createSignal(100)
+  const [hide, setHide] = createSignal(false)
   const [startedSeeing] = createSignal(Date.now())
 
   onMount(() => {
@@ -31,19 +33,24 @@ export default function ChangeLogDialog(props: ChangeLogDialogProps) {
           setShowHint(false)
           localStorage.setItem('last_version_seen', VERSION)
         }
+        const timeLeft = HINT_DURATION - (Date.now() - startedSeeing())
+        if (timeLeft <= 200) {
+          setHide(true)
+        }
       })
     }
   })
 
   return <>
     <Show when={showHint()}>
-      <div class={styles.hint} onClick={() => {
+      <div class={cn(styles.hint, hide() && styles.hide)} onClick={() => {
         props.setOpen(true)
         setShowHint(false)
       }}>
         <progress class={styles.timer} max={100} value={timer()} />
-        <p class={styles.headline}>New update! More clips added.</p>
-        <small>Click to see more changes.</small>
+        <p class={styles.topline}>UGHH, FINALLY!</p>
+        <p class={styles.headline}>More clips added</p>
+        {/*<small>Click to see more changes.</small>*/}
       </div>
     </Show>
     <Dialog onOpenChange={open => {
@@ -57,14 +64,10 @@ export default function ChangeLogDialog(props: ChangeLogDialogProps) {
           <Dialog.Close class={styles.close} />
           <h2>New update!</h2>
           <h3>More clips!</h3>
-          <p>New clips up until early May 2025 have been added to the list.</p>
+          <p>New clips up until early October 2026 have been added to the list.</p>
           <hr />
-          <p>Hard Mode now available to everyone without requirements.</p>
-          <p>Clip list truncated to at most 200 clips per date to give Jan 6th more equal weight in the random
-            selection; at
-            the request of Ms. Media and Rat.</p>
-          <p>New score sharing feature after playing.</p>
-          <p>Minor bugfixes and improvements.</p>
+          <p>Added a fallback mechanism for deleted clips. (Will now always show an existing clip)</p>
+          <p>Minor bugfixes.</p>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog>

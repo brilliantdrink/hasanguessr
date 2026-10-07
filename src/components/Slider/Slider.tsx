@@ -1,4 +1,4 @@
-import {Accessor, createEffect, createMemo, createSignal, onCleanup, Setter} from 'solid-js'
+import {Accessor, createEffect, createMemo, createSignal, onCleanup, onMount, Setter} from 'solid-js'
 import {default as cn} from 'classnames'
 import styles from './slider.module.scss'
 import {playSoundThrottled, Sounds} from '../../sound'
@@ -13,7 +13,7 @@ export interface Step {
 const steps: Step[] = []
 const stepsFine: Step[] = []
 const rangeStart: [number, number, number] = [2018, 3, 23]
-const rangeEnd: [number, number, number] = [2025, 5, 3]
+const rangeEnd: [number, number, number] = [2026, 10, 5]
 let monthCursor = rangeStart[1]
 
 for (let yearCursor = rangeStart[0]; yearCursor <= rangeEnd[0]; yearCursor++) {
@@ -62,7 +62,7 @@ export default function Slider({value, setValue: setValueSilent, hardMode}: {
 
   const stepsAdaptive = createMemo(() => !hardMode() ? steps : stepsFine)
 
-  createEffect(() => {
+  onMount(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.altKey || event.ctrlKey || event.metaKey) return
       if (event.key.startsWith('Arrow')) event.preventDefault()
@@ -86,7 +86,10 @@ export default function Slider({value, setValue: setValueSilent, hardMode}: {
         <div class={styles.arrow} />
       </div>
       <input class={styles.rangeSelect} type={'range'} min={0} max={stepsAdaptive().length - 1} step={1} value={value()}
-             onInput={e => setValue(Number(e.target.value))} />
+             onInput={e => {
+               console.log(Number(e.target.value))
+               setValue(Number(e.target.value))
+             }} />
     </div>
   </>
 }

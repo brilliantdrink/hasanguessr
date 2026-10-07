@@ -1,4 +1,4 @@
-import {Accessor, createMemo, createSignal} from 'solid-js'
+import {Accessor, createMemo, createSignal, onMount, Show} from 'solid-js'
 import {ImCheckmark} from 'solid-icons/im'
 import {CgArrowsExpandRight, CgCompressRight} from 'solid-icons/cg'
 import {default as cn} from 'classnames'
@@ -32,18 +32,20 @@ export default function TwitchEmbed({id}: { id: Accessor<string | undefined> }) 
           Allow clips.twitch.tv and assets.twitch.tv in your ad blocker.
         </span>
         </div>
-        {!id() ? null : <iframe src={getEmbedUrl(id() as string)} allowfullscreen class={styles.player} />}
+        <Show when={id()}>
+          <iframe src={getEmbedUrl(id() as string)} allowfullscreen class={styles.player} />
+        </Show>
         {showWarning() && showWarningPersisted() &&
           <div class={styles.warning}>
             <h2>Beware, Comrade!</h2>
             <p>
-              Due to the length of the list of clips ({formattedClipsAmount()}), it is impossible to check if every single one is TOS
-              friendly.
+              Due to the length of the list of clips ({formattedClipsAmount()}), it is impossible to check if every
+              single one is TOS friendly.
               Please check yourself before showing on stream!
             </p>
             <label>
               <input class={styles.check} type={'checkbox'}
-                     onChange={(e) => setInput(Boolean(e.target.checked))} />
+                onChange={(e) => setInput(Boolean(e.target.checked))} />
               <ImCheckmark class={styles.checkmark} />
               <span>Do not show again</span>
             </label>

@@ -4,9 +4,10 @@
 .hint {
   position: fixed;
   top: 5rem;
-  left: 1rem;
-  //width: 16rem;
-  padding: 1rem;
+  $left: 1rem;
+  left: $left;
+  width: 12rem;
+  padding: 0.8rem 1rem;
 
   background: colors.$egg;
   color: colors.$black;
@@ -16,6 +17,13 @@
   flex-direction: column;
 
   cursor: pointer;
+
+  transform: translateX(0);
+  transition: transform .2s ease-in;
+
+  &.hide {
+    transform: translateX(calc(-100% - #{$left} - .5rem));
+  }
 
   .timer {
     position: absolute;
@@ -42,9 +50,23 @@
     }
   }
 
+  .topline {
+    margin: 0 auto .2em -.4em;
+    padding: 0 .4em;
+
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: .2ch;
+
+    color: colors.$egg;
+    background: colors.$red;
+  }
+
   .headline {
     margin: 0;
     font-weight: bold;
+    font-size: 20px;
   }
 
   small {

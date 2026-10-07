@@ -9,7 +9,7 @@ let i = 0
 const today = new Date();
 today.setHours(0, 0, 0)
 
-const date = new Date(2024, 7, 1)
+const date = new Date(2025, 4, 4)
 today.setHours(0, 0, 0)
 
 async function fetchClipsPage() {

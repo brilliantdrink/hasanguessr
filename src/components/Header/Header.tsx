@@ -37,8 +37,8 @@ function KoFiButton() {
       <Dialog.Portal>
         <Dialog.Overlay class={styles.overlay} />
         <Dialog.Content class={styles.modalKoFi}>
-          <iframe id={'kofiframe'} src={'https://ko-fi.com/brilliant_drink/?hidefeed=true&widget=true&embed=true&preview=true'}
-                  title={'brilliant_drink'} class={styles.iframe}/>
+          <iframe id={'kofiframe'} src={'https://ko-fi.com/b_drink/?hidefeed=true&widget=true&embed=true&preview=true'}
+                  title={'b_drink'} class={styles.iframe}/>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog>

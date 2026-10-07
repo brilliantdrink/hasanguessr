@@ -32,7 +32,7 @@ export default function App() {
     if (typeof update === 'function') {
       const oldValue: number | null = _slideValue()
       newValue = update(oldValue !== null ? Math.round(oldValue * stepsAdaptive().length) : null)
-    } else newValue = update ? (update / stepsAdaptive().length) : null
+    } else newValue = typeof update === 'number' ? (update / stepsAdaptive().length) : null
     _setSlideValueSilent(newValue)
   }
 
@@ -128,14 +128,14 @@ export default function App() {
         <div class={styles.share}>
           <div class={styles.text}>{share()}</div>
           <Button variant={'primary'} class={styles.button}
-                  onClick={() =>
-                    navigator.clipboard.writeText(share() ?? '')
-                      .then(() => {
-                        setShowCopyConfirmation(false)
-                        setShowCopyConfirmation(true)
-                      })
-                      .catch(() => 0)
-          }>
+            onClick={() =>
+              navigator.clipboard.writeText(share() ?? '')
+                .then(() => {
+                  setShowCopyConfirmation(false)
+                  setShowCopyConfirmation(true)
+                })
+                .catch(() => 0)
+            }>
             Copy
           </Button>
           {showCopyConfirmation() && <div class={styles.confirmation}>Copied to clipboard!</div>}

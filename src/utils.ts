@@ -40,15 +40,24 @@ export function getMonthName(month: number) {
 
 export type ClipData = [string, string]
 
+const cache: Record<string, Promise<string>> = {}
+
+function fetchTxt(url: string) {
+  if (!(url in cache)) {
+    cache[url] = fetch(url).then(res => res.text())
+  }
+  return cache[url]
+}
+
 async function getClipForDateBase(date: Date, shift: boolean, old: boolean) {
-  const clipsDbIndex = await fetch(clipsDbIndexFile).then(res => res.text())
+  const clipsDbIndex = await fetchTxt(clipsDbIndexFile)
   let clip = null, i = 0
   const clipsLength = Number(clipsDbIndex.split(' ')[0])
   const clipsPageSize = Number(clipsDbIndex.split(' ')[1])
   do {
     const clipIndex = Math.floor(randomForDate(date, i++, shift, old) * clipsLength)
     const clipsDbFile = (await import((`../clips-db_${Math.floor(clipIndex / clipsPageSize).toString().padStart(3, '0')}.txt`))).default
-    const clipsDb = await fetch(clipsDbFile).then(res => res.text())
+    const clipsDb = await fetchTxt(clipsDbFile)
     clip = clipsDb.split('\n')[clipIndex % clipsPageSize].split(' ')
   } while (!clip)
   return clip
@@ -61,7 +70,7 @@ export function getClipForDate(date: Date, shift = true, old = false) {
 export function useClipsMeta() {
   return createResource(
     async () => {
-      const clipsDbIndex = await fetch(clipsDbIndexFile).then(res => res.text())
+      const clipsDbIndex = await fetchTxt(clipsDbIndexFile)
       const clipsLength = Number(clipsDbIndex.split(' ')[0])
       const clipsPageSize = Number(clipsDbIndex.split(' ')[1])
       return {clipsLength, clipsPageSize}
@@ -78,12 +87,19 @@ export function useClipForDate(date: Date, shift: boolean, old: boolean) {
       do {
         const clipIndex = Math.floor(randomForDate(date, i++, shift, old) * clipsMeta.clipsLength)
         const clipsDbFile = (await import((`../clips-db_${Math.floor(clipIndex / clipsMeta.clipsPageSize).toString().padStart(3, '0')}.txt`))).default
-        const clipsDb = await fetch(clipsDbFile).then(res => res.text())
+        const clipsDb = await fetchTxt(clipsDbFile)
         clip = clipsDb.split('\n')[clipIndex % clipsMeta.clipsPageSize].split(' ')
-      } while (!clip)
+      } while (!clip || !(await clipExists(clip[0])))
       return clip
     }
   )
+}
+
+function clipExists(id: string) {
+  return fetch(`https://api.b-dr.ink/hr/clips?id=${id}`)
+    .then(res => res.json())
+    .then(data => !Array.isArray(data.data) || data.data.length !== 0)
+    .catch(_ => true)
 }
 
 export function useClipForToday(shift = true, old = false) {
